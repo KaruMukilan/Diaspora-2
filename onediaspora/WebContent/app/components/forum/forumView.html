@@ -1,0 +1,111 @@
+	<div id="modalbackground" ng-show="forumCtrl.form" style=" position: fixed;margin:0px; height:100%; width:100%; background-color: #7F7F7F; opacity: 0.3; z-index: 1000" ></div>
+	
+
+	<h1 class="ctitle shift-right"><span class="glyphicon glyphicon-comment"></span> Discussions <span class="pull right">{{forumCtrl.forums.length}} Found</span></h1>
+
+	<!-- Loader -->
+	<div class="preloader-wrapper big active ajax-loader" ng-if="forumCtrl.process">
+		<div class="spinner-layer spinner-blue-only">
+			<div class="circle-clipper left">
+				<div class="circle"></div>
+			</div><div class="gap-patch">
+			<div class="circle"></div>
+		</div><div class="circle-clipper right">
+		<div class="circle"></div>
+	</div>
+</div>
+</div><!-- Loader -->
+
+<button ng-click="forumCtrl.form=true" class="btn btn-primary" ng-if="client">
+	Add Forum
+</button>
+<div class="col-sm-8 col-xs-12 pop-form" ng-show="forumCtrl.form">
+<p class="alert alert-success col-xs-4" ng-if="forumCtrl.msgApproval">Forum successfully sent for approval, it will be added automatically ! <span class="pull right" ng-click="forumCtrl.msgApproval=false">X</span></p>
+	<div class="panel panel-primary" >
+		<div class="panel-heading">Manage Forum</div>
+		<div class="panel-body">
+			<form  ng-submit="forumCtrl.submitForum()">
+				<input type="hidden" ng-model="forumCtrl.forum.forumId" />
+				<div class="input-field">
+					<i class="fa fa-server fa-2x prefix {{forumCtrl.forum.forumTitle ? 'active':''}}"></i>
+					<input id="forum_title" type="text" class="validate" ng-model="forumCtrl.forum.forumTitle" required/>
+					<label for="forum_title" class="{{forumCtrl.forum.forumTitle ?'active':''}}">Forum Title</label>
+				</div>
+				<div class="input-field">
+					<i class="material-icons prefix {{forumCtrl.forum.forumDescription ?'active':''}}" >phone</i>
+					<textarea id="forum_description"  class="materialize-textarea" ng-model="forumCtrl.forum.forumDescription"></textarea>
+					<label for="forum_description" class="{{forumCtrl.forum.forumDescription ?'active':''}}">Description</label>
+				</div>
+				<input type="submit"  value="{{!forumCtrl.forum.forumId ? 'Add Forum' : 'Update Forum'}}" class="{{!forumCtrl.forum.forumId ?'btn green' : 'btn amber'}} col-sm-offset-2">
+				<button class="btn btn-danger" ng-click="forumCtrl.form=false"> Cancel</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="row">		
+	<div class="col-md-9" >
+		<h2 ng-if="forumCtrl.failed">Unable to Load data try after sometime</h2>
+
+		<p class="text-center" ng-hide="forumCtrl.dataLoaded">
+			<i class="fa fa-spinner fa-pulse fa-5x"></i>
+		</p>
+		<br>
+		<div class="row"  ng-show="forumCtrl.dataLoaded" ng-repeat="forum in forumCtrl.forums | orderBy:'createdAt':true">
+			<div class="col-sm-12" >
+				<ul class="collapsible popout" data-collapsible="accordion">
+					<li class="inner-content">
+						<div class="collapsible-header collection">
+							<h2>{{forum.forumTitle}}</h2>
+							<div ng-if="forum.userId == client.userId" class="pull right">
+								<a class="btn btn-warning" ng-click="forumCtrl.editForum(forum.forumId)"><span class="fa fa-edit pointer"></span> Edit</a>
+								<a class="btn btn-danger" ng-click="forumCtrl.deleteForum(forum.forumId)">
+									<span class="fa fa-trash pointer"></span> Delete</a>
+								</div>
+								<p class="title">
+									{{forum.forumDescription}}
+								</p>
+								<p> <b>{{forum.forumPosts.length}} Post/s</b>&nbsp;&nbsp;Last Updated : 
+									{{forum.modifiedAt | date :'h:mm a, MMM d, y ' }}<a href="#/forum/view" class="btn waves-effect waves-light" ng-click="forumCtrl.getForum(forum.forumId)" ng-if="client">Comment</a></p>	
+									<br>
+								</div>
+								<div class="collapsible-body">									
+									<ul class="collection" ng-repeat="fp in forum.forumPosts | limitTo : 4 ">
+										<li class="collection-item avatar">
+											<img  class="circle card-image" ng-src="./assets/images/users/{{fp.userId}}.png"><span class="card-text">{{fp.forumPostContent}}</span>
+										</li>
+									</ul>
+									<a class="btn green darken-1 waves-effect waves-light" ng-show="forum.forumPosts.length>4" 
+										ng-click="forumCtrl.getForum(forum.forumId)">View More</a>
+									</div>
+								</li>
+								<script>
+									//Instert this just after closing </li>             
+									$(document).ready(function() {
+										$('.collapsible').collapsible({
+											accordion: true 
+										});
+									});
+								</script>
+							</ul>
+						</div>
+
+					</div><!--  Inner row -->
+
+				</div>   <!-- col-sm-8  -->
+
+				<div class="col-sm-3">
+					<h5 class="ctitle">New Blog Comments</h5>
+					<div class="inner-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate, tenetur vitae consectetur sint accusamus dignissimos est, illo provident voluptatum quos assumenda eum. Ex possimus mollitia laboriosam ad quisquam, atque delectus!</div>
+					<div class="inner-content">Nulla, accusantium nobis laboriosam itaque? Ab consequuntur, repudiandae magni, fugiat ipsum debitis eveniet consequatur nobis. Ipsam voluptatum tenetur, id modi vero quod ad provident fuga quibusdam cum officia dolorum ipsum.</div>
+					<div class="inner-content">Rem quos et id deserunt repudiandae, maxime, ullam eius iure voluptates, provident obcaecati sed alias ratione soluta, eligendi enim cum neque deleniti? Quis impedit consectetur ab vitae adipisci, quia fuga.</div>
+					<div class="inner-content">Rerum ex ullam magnam. Consequatur vitae reiciendis sequi doloribus tempore maiores voluptatibus deserunt praesentium ducimus sint sapiente, quo eius excepturi consequuntur optio dignissimos explicabo ipsa ab suscipit iure porro ea.</div>
+					<div class="inner-content">Delectus voluptatibus natus pariatur modi eligendi rem voluptate quod labore eos adipisci, repellendus rerum maxime nihil quasi. Delectus quasi deleniti voluptates saepe dolores molestiae, sint cupiditate, praesentium, quod obcaecati nam.</div>
+				</div>  <!-- col-sm-3 -->
+
+			</div>	<!-- Outer row -->
+
+
+
+
+
